@@ -1,0 +1,104 @@
+Running task1 for value n = 2^10
+0.001136
+0.726523
+7.2884
+
+Running task1 for value n = 2^11
+0.003684
+0.262293
+3.04669
+
+Running task1 for value n = 2^12
+0.010351
+-0.790495
+-74.7787
+
+Running task1 for value n = 2^13
+0.01965
+0.933275
+-61.5303
+
+Running task1 for value n = 2^14
+0.042437
+0.968314
+-69.2813
+
+Running task1 for value n = 2^15
+0.084565
+0.907191
+34.4766
+
+Running task1 for value n = 2^16
+0.164446
+0.524104
+97.1296
+
+Running task1 for value n = 2^17
+0.329788
+-0.445637
+144.71
+
+Running task1 for value n = 2^18
+0.650976
+0.42125
+67.6373
+
+Running task1 for value n = 2^19
+1.3271
+0.65299
+336.824
+
+Running task1 for value n = 2^20
+2.67107
+0.453976
+-5.48222
+
+Running task1 for value n = 2^21
+5.58108
+0.462148
+-152.232
+
+Running task1 for value n = 2^22
+12.5603
+-0.509686
+-518.607
+
+Running task1 for value n = 2^23
+25.5087
+-0.191043
+-3079.51
+
+Running task1 for value n = 2^24
+51.1907
+-0.661955
+289.369
+
+Running task1 for value n = 2^25
+106.083
+0.0266314
+-2672.32
+
+Running task1 for value n = 2^26
+204.208
+-0.730635
+-9359.36
+
+Running task1 for value n = 2^27
+408.272
+0.198222
+10267.6
+
+Running task1 for value n = 2^28
+935.101
+-0.148559
+20621.1
+
+Running task1 for value n = 2^29
+9460.39
+0.530448
+-15061.8
+
+Running task1 for value n = 2^30
+17974.3
+0.15331
+-25243.4
