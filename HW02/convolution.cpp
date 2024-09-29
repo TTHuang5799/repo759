@@ -1,5 +1,6 @@
 #include "convolution.h"
 #include <cstddef>
+#include <omp.h>
 
 float check_f(const float *f, std::size_t i, std::size_t j, std::size_t n) {
 	if (0 <= i && i < n && 0 <= j && j < n)
