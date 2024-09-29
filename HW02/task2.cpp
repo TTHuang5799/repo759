@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
     	convolve(image, output, n, mask, m); 
     	auto stop = high_resolution_clock::now();
 
-	auto duration_ms = duration_cast<milliseconds>(stop - start);
+	auto duration_ms = duration_cast<duration<double, std::milli>>(stop - start);
 
 	cout << duration_ms.count() << endl;
 	cout << output[0] << endl;
