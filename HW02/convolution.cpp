@@ -25,7 +25,6 @@ void convolve(const float *image, float *output, std::size_t n, const float *mas
 	                output[x * n + y] += mask[i * m + j] * check_f(image, x + i - (m - 1) / 2, y + j - (m - 1) / 2, n);
 	            }
 	        }
-	        cout << "output[" << x << ", " << y << "] = " << output[x * n + y] << endl;
 	    }
 	}
 }
