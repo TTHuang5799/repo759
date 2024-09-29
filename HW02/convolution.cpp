@@ -16,9 +16,9 @@ void convolve(const float *image, float *output, std::size_t n, const float *mas
 	}
 #pragma omp parallel for collapse(2)
 	for(std::size_t x = 0; x < n; x++) {
-		for(std:size_t y = 0; y < n; y++) {
+		for(std::size_t y = 0; y < n; y++) {
 			for(std::size_t i = 0; i < m; i++) {
-				for(std:size_t j = 0; j < 0; j++) {
+				for(std::size_t j = 0; j < 0; j++) {
 					output[x * n + y] += mask[i * m + j] * check_f(image, x + i - ((m-1)/2), y + j - ((m-1)/2), n);
 				}
 			}
