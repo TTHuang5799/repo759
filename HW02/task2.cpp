@@ -21,8 +21,10 @@ int main(int argc, char *argv[]) {
 	random_device rd;
 	mt19937_64 generator(rd());
 
-	uniform_real_distribution<float> distImge(-10.0, 10.0);
-	uniform_real_distribution<float> distMask(-1.0, 1.0); 
+	const float minImge = -10.0, maxImge = 10.0;
+	const float minMask = -1.0, maxMask = 1.0;
+	uniform_real_distribution<float> distImge(minImge, maxImge);
+	uniform_real_distribution<float> distMask(minMask, maxMask); 
 
 	float *image = new float[n*n];
 	float *mask = new float[m*m];
