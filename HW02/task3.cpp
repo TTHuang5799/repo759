@@ -16,8 +16,8 @@ int main(int argc, char *argv[]) {
 	
 	size_t n = atoi(argv[1]); 
 	
-	double *A = (double*)malloc(n * n *sizeof(double));
-	double *B = (double*)malloc(n * n * sizeof(double));
+	double *A = new double[n * n];
+	double *B = new double[n * n]; 
 	auto result = new double[n * n](); //All elements set to 0.0 for double
 	
   	// initialize A and B randomly
