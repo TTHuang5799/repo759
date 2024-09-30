@@ -14,7 +14,7 @@ int main(int argc, char *argv[]) {
 	const double min = -10.0, max = 10.0;
 	uniform_real_distribution<double> dist(min, max);
 	
-	size_t n = 1024;
+	size_t n = atoi(argv[1]); 
 	
 	double *A = (double*)malloc(n * n *sizeof(double));
 	double *B = (double*)malloc(n * n * sizeof(double));
