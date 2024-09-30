@@ -14,7 +14,7 @@ float check_f(const float *f, std::size_t i, std::size_t j, std::size_t n) {
 
 void convolve(const float *image, float *output, std::size_t n, const float *mask, std::size_t m) {
 	//Initialize all to 0
-	for(size_t i = 0; i < n * n; i++) {
+	for(std::size_t i = 0; i < n * n; i++) {
 		output[i] = 0;
 	}
 #pragma omp parallel for collapse(2)
