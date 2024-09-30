@@ -72,7 +72,7 @@ int main(int argc, char *argv[]) {
 	//mmul4
 	result = new double[n * n]();
 	start = high_resolution_clock::now();
-  	mmul4(Av, Bv, result, n);
+  	mmul4(A_vector, B_vector, result, n);
   	stop = high_resolution_clock::now();
 
  	duration_ms = duration_cast<duration<double, std::milli>>(stop - start);
