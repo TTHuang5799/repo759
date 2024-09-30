@@ -22,7 +22,7 @@ void convolve(const float *image, float *output, std::size_t n, const float *mas
 		for (std::size_t y = 0; y < n; y++) {
 			for (std::size_t i = 0; i < m; i++) {
 	        		for (std::size_t j = 0; j < m; j++) {
-	        			output[x * n + y] += mask[i * m + j] * check_f(image, x + i - (m - 1) / 2, y + j - (m - 1) / 2, n);
+	        			output[x * n + y] += mask[i * m + j] * check_f(image, x + i - ((m - 1)/2), y + j - ((m - 1)/2), n);
 	        		}
 			}
 	    	}
