@@ -1,52 +1,46 @@
 #include <iostream>
 #include <random>
 #include <chrono>
-#include <cstdlib>
 #include <omp.h>
 #include "msort.h"
 
-using namespace std;
-using namespace chrono;
-
-int main(int argc, char *argv[]) {
-    if (argc < 4) {
-        cout << "Usage: " << argv[0] << " <n> <t> <ts>" << endl;
+int main(int argc, char* argv[]) {
+    if (argc != 4) {
+        std::cerr << "Usage: " << argv[0] << " n t ts\n";
         return 1;
     }
-    
-    size_t n = atoi(argv[1]);  
-    int num_threads = atoi(argv[2]);  
-    size_t ts = atoi(argv[3]);
 
-    // Ensure that OpenMP doesn't dynamically adjust the number of threads
-    omp_set_dynamic(0);
-    omp_set_num_threads(num_threads);
+    int n = std::stoi(argv[1]);  // Array size
+    int t = std::stoi(argv[2]);  // Number of threads
+    int ts = std::stoi(argv[3]); // Threshold
 
-    random_device rd;
-    mt19937 generator(rd());
-    uniform_int_distribution<int> dist(-1000, 1000);
+    // Set the number of threads
+    omp_set_num_threads(t);
 
+    // Initialize random number generator
+    std::random_device rd;
+    std::mt19937 gen(rd());
+    std::uniform_int_distribution<int> dis(-1000, 1000);
+
+    // Create and fill the array
     int* arr = new int[n];
-
-    for (size_t i = 0; i < n; ++i) {
-        arr[i] = dist(generator);
+    for (int i = 0; i < n; ++i) {
+        arr[i] = dis(gen);
     }
 
-    auto start = high_resolution_clock::now();
-    #pragma omp parallel
-    {
-        #pragma omp single
-        msort(arr, 0, n - 1, ts);  // Sort the array
-    }
-    auto stop = high_resolution_clock::now();
+    // Time the sorting process
+    auto start = std::chrono::high_resolution_clock::now();
+    msort(arr, n, ts);
+    auto end = std::chrono::high_resolution_clock::now();
+    std::chrono::duration<double, std::milli> elapsed = end - start;
 
-    auto duration_ms = duration_cast<duration<double, milli>>(stop - start);
+    // Print the first and last elements
+    std::cout << arr[0] << std::endl;
+    std::cout << arr[n - 1] << std::endl;
 
-    cout << arr[0] << endl;
-    cout << arr[n - 1] << endl;
-    cout << duration_ms.count() << " ms" << endl;
+    // Print the time taken
+    std::cout << elapsed.count() << " ms\n";
 
     delete[] arr;
-
     return 0;
 }
