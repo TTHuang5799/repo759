@@ -1,46 +1,60 @@
-#include <iostream>
-#include <vector>
-#include <cstdlib>
-#include <ctime>
-#include <omp.h>
 #include "matmul.h"
+#include <iostream>
+#include <chrono>
+#include <cstddef>
+#include <random>
+#include <omp.h>
+
+using namespace std;
+using namespace chrono;
 
 int main(int argc, char *argv[]) {
+    // Check command line arguments
     if (argc != 3) {
-        std::cerr << "Usage: " << argv[0] << " <matrix_size> <num_threads>" << std::endl;
+        cerr << "Usage: " << argv[0] << " <matrix_size> <num_threads>" << endl;
         return 1;
     }
 
-    unsigned int n = std::atoi(argv[1]); // Size of the matrices
-    int t = std::atoi(argv[2]);          // Number of threads
+    // Initialize random number generator and distribution
+    random_device rd;
+    mt19937_64 generator(rd()); 
+    const double min = -10.0, max = 10.0;
+    uniform_real_distribution<double> dist(min, max);
+    
+    size_t n = atoi(argv[1]);  // Matrix size
+    int num_threads = atoi(argv[2]);  // Number of threads
 
-    // Initialize matrices A, B, and C (all of size n * n)
-    std::vector<double> A(n * n), B(n * n), C(n * n, 0.0);
+    // Allocate memory for matrices A, B, and result C
+    double *A = new double[n * n];
+    double *B = new double[n * n]; 
+    auto C = new double[n * n]();  // Initialize result matrix C to 0.0
 
-    // Fill matrices A and B with random float numbers
-    std::srand(static_cast<unsigned int>(std::time(0))); // Seed for random number generation
-    for (unsigned int i = 0; i < n * n; i++) {
-        A[i] = static_cast<double>(rand()) / RAND_MAX;
-        B[i] = static_cast<double>(rand()) / RAND_MAX;
+    // Initialize A and B with random values
+    for (size_t i = 0; i < n * n; i++) {
+        A[i] = dist(generator);
+        B[i] = dist(generator);
     }
 
     // Set the number of threads
-    omp_set_num_threads(t);
+    omp_set_num_threads(num_threads);
 
-    // Measure the time taken by the mmul function
-    double start_time = omp_get_wtime();
-    mmul(A.data(), B.data(), C.data(), n); // Parallel matrix multiplication
-    double end_time = omp_get_wtime();
+    // Measure time for parallel mmul (matrix multiplication)
+    auto start = high_resolution_clock::now();
+    mmul(A, B, C, n);  // Parallelized matrix multiplication with OpenMP
+    auto stop = high_resolution_clock::now();
 
-    // Calculate the elapsed time in milliseconds
-    double elapsed_time_ms = (end_time - start_time) * 1000.0;
+    // Calculate duration in milliseconds
+    auto duration_ms = duration_cast<duration<double, milli>>(stop - start);
 
-    // Print the first and last element of matrix C
-    std::cout << "First element of C: " << C[0] << std::endl;
-    std::cout << "Last element of C: " << C[n * n - 1] << std::endl;
+    // Print first and last elements of the result matrix C
+    cout << C[0] << endl;
+    cout << C[n * n - 1] << endl;
+    cout << duration_ms.count() << endl;
 
-    // Print the time taken in milliseconds
-    std::cout << "Time taken by mmul: " << elapsed_time_ms << " milliseconds" << std::endl;
+    // Clean up dynamically allocated memory
+    delete[] A;
+    delete[] B;
+    delete[] C;
 
     return 0;
 }
