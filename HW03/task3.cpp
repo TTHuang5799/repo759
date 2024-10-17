@@ -18,6 +18,8 @@ int main(int argc, char *argv[]) {
     int num_threads = atoi(argv[2]);  
     size_t ts = atoi(argv[3]);
 
+    // Ensure that OpenMP doesn't dynamically adjust the number of threads
+    omp_set_dynamic(0);
     omp_set_num_threads(num_threads);
 
     random_device rd;
@@ -42,7 +44,7 @@ int main(int argc, char *argv[]) {
 
     cout << arr[0] << endl;
     cout << arr[n - 1] << endl;
-    cout << duration_ms.count() << endl;
+    cout << duration_ms.count() << " ms" << endl;
 
     delete[] arr;
 
