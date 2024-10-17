@@ -30,7 +30,7 @@ int main(int argc, char* argv[]) {
 
     // Time the sorting process
     auto start = std::chrono::high_resolution_clock::now();
-    msort(arr, n, ts);
+    msort(arr, 0, n - 1, ts);  // Updated to pass left=0, right=n-1
     auto end = std::chrono::high_resolution_clock::now();
     std::chrono::duration<double, std::milli> elapsed = end - start;
 
