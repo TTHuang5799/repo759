@@ -53,7 +53,6 @@ void merge(int* arr, std::size_t left, std::size_t mid, std::size_t right) {
 void msort(int* arr, std::size_t left, std::size_t right, std::size_t ts) {
     if (right - left + 1 <= ts) {
         // Serial insertion sort
-        std::cout << "Using serial sort: left = " << left << ", right = " << right << std::endl;
         for (std::size_t i = left + 1; i <= right; i++) {
             int key = arr[i];
             std::size_t j = i - 1;
@@ -65,11 +64,13 @@ void msort(int* arr, std::size_t left, std::size_t right, std::size_t ts) {
         }
     } else {
         std::size_t mid = left + (right - left) / 2;
-        std::cout << "Splitting: left = " << left << ", mid = " << mid << ", right = " << right << std::endl;
-        #pragma omp task shared(arr)
+        
+        #pragma omp task shared(arr) if(right - left > ts)
         msort(arr, left, mid, ts);
-        #pragma omp task shared(arr)
+        
+        #pragma omp task shared(arr) if(right - left > ts)
         msort(arr, mid + 1, right, ts);
+        
         #pragma omp taskwait
         merge(arr, left, mid, right);
     }
