@@ -1,4 +1,5 @@
 #include <omp.h>
+#include <algorithm>  // Add this to use std::sort
 #include "msort.h"
 
 // Merge function to merge two sorted halves
@@ -50,12 +51,12 @@ void parallel_merge_sort(int* arr, int* temp, int left, int right, int ts) {
 }
 
 // Interface function called by task3.cpp
-void msort(int* arr, int n, int ts) {
-    int* temp = new int[n];
+void msort(int* arr, std::size_t left, std::size_t right, std::size_t ts) {
+    int* temp = new int[right - left + 1];
     #pragma omp parallel
     {
         #pragma omp single
-        parallel_merge_sort(arr, temp, 0, n - 1, ts);
+        parallel_merge_sort(arr, temp, left, right, ts);
     }
     delete[] temp;
 }
