@@ -1,14 +1,15 @@
 #include "msort.h"
 #include <omp.h>
 
-// Merge function to combine two sorted halves
 void merge(int* arr, std::size_t left, std::size_t mid, std::size_t right) {
     std::size_t n1 = mid - left + 1;
     std::size_t n2 = right - mid;
 
+    // Allocate memory for temporary arrays
     int* leftArr = new int[n1];
     int* rightArr = new int[n2];
 
+    // Copy data to temp arrays
     for (std::size_t i = 0; i < n1; i++) {
         leftArr[i] = arr[left + i];
     }
@@ -18,6 +19,7 @@ void merge(int* arr, std::size_t left, std::size_t mid, std::size_t right) {
 
     std::size_t i = 0, j = 0, k = left;
 
+    // Merge the temp arrays back into arr
     while (i < n1 && j < n2) {
         if (leftArr[i] <= rightArr[j]) {
             arr[k] = leftArr[i];
@@ -29,18 +31,21 @@ void merge(int* arr, std::size_t left, std::size_t mid, std::size_t right) {
         k++;
     }
 
+    // Copy remaining elements of leftArr[], if any
     while (i < n1) {
         arr[k] = leftArr[i];
         i++;
         k++;
     }
 
+    // Copy remaining elements of rightArr[], if any
     while (j < n2) {
         arr[k] = rightArr[j];
         j++;
         k++;
     }
 
+    // Free the allocated memory for the temp arrays
     delete[] leftArr;
     delete[] rightArr;
 }
