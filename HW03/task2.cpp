@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
 
     // Check for the correct number of arguments
     if (argc < 3) {
-        cout << "Usage: " << argv[0] << " <n> <t>" << endl;
+        cout << "Usage: " << argv[0] << " <matrix_size> <num_threads>" << endl;
         return 1;
     }
 
