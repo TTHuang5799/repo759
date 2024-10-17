@@ -3,6 +3,6 @@
 
 #include <cstddef>
 
-void msort(int* arr, std::size_t left, std::size_t right);
+void msort(int* arr, std::size_t left, std::size_t right, std::size_t ts); 
 
 #endif
