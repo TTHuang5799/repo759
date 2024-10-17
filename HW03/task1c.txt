@@ -1,0 +1,99 @@
+Running task1 for value n = 1024, t = 1
+82.2032
+1041.06
+717.039
+
+Running task1 for value n = 1024, t = 2
+-52.7534
+-613.4
+400.772
+
+Running task1 for value n = 1024, t = 3
+686.13
+1466.79
+283.847
+
+Running task1 for value n = 1024, t = 4
+-561.344
+132.259
+218.209
+
+Running task1 for value n = 1024, t = 5
+1608.73
+50.9528
+183.498
+
+Running task1 for value n = 1024, t = 6
+-161.806
+1934.39
+167.45
+
+Running task1 for value n = 1024, t = 7
+-413.647
+1217.66
+138.178
+
+Running task1 for value n = 1024, t = 8
+-1607.54
+1386.5
+126.918
+
+Running task1 for value n = 1024, t = 9
+1891.82
+-265.565
+110.899
+
+Running task1 for value n = 1024, t = 10
+-515.607
+469.953
+100.852
+
+Running task1 for value n = 1024, t = 11
+-92.2977
+1066.66
+160.923
+
+Running task1 for value n = 1024, t = 12
+-281.887
+2671.65
+151.644
+
+Running task1 for value n = 1024, t = 13
+-693.726
+460.611
+140.671
+
+Running task1 for value n = 1024, t = 14
+199.262
+-391.95
+133.506
+
+Running task1 for value n = 1024, t = 15
+560.991
+-1466.15
+125.952
+
+Running task1 for value n = 1024, t = 16
+-75.1047
+-386.967
+119.478
+
+Running task1 for value n = 1024, t = 17
+-1240.94
+195.201
+114.845
+
+Running task1 for value n = 1024, t = 18
+-345.095
+-317.123
+112.55
+
+Running task1 for value n = 1024, t = 19
+-402.104
+-447.583
+104.974
+
+Running task1 for value n = 1024, t = 20
+351.556
+112.248
+100.395
