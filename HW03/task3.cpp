@@ -39,7 +39,7 @@ int main(int argc, char* argv[]) {
     std::cout << arr[n - 1] << std::endl;
 
     // Print the time taken
-    std::cout << elapsed.count() << " ms\n";
+    std::cout << elapsed.count() << std::endl;
 
     delete[] arr;
     return 0;
