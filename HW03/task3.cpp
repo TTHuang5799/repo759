@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
     
     size_t n = atoi(argv[1]);  
     int num_threads = atoi(argv[2]);  
-    size_t ts = atoi(argv[3]); 
+    size_t ts = atoi(argv[3]);
 
     omp_set_num_threads(num_threads);
 
