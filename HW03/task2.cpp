@@ -59,7 +59,7 @@ int main(int argc, char *argv[]) {
 
     cout << output[0] << endl;
     cout << output[n * n - 1] << endl;
-    cout << duration_ms.count() << " ms" << endl;
+    cout << duration_ms.count() << endl;
 
     delete[] image;
     delete[] mask;
