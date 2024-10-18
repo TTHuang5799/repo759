@@ -1,0 +1,80 @@
+Running task3 for n = 10^6, t = 1, best_ts = 1024
+-1000
+1000
+70.1719
+Running task3 for n = 10^6, t = 2, best_ts = 1024
+-1000
+1000
+48.8179
+Running task3 for n = 10^6, t = 3, best_ts = 1024
+-1000
+1000
+46.1284
+Running task3 for n = 10^6, t = 4, best_ts = 1024
+-1000
+1000
+37.1274
+Running task3 for n = 10^6, t = 5, best_ts = 1024
+-1000
+1000
+33.4845
+Running task3 for n = 10^6, t = 6, best_ts = 1024
+-1000
+1000
+28.0483
+Running task3 for n = 10^6, t = 7, best_ts = 1024
+-1000
+1000
+25.1215
+Running task3 for n = 10^6, t = 8, best_ts = 1024
+-1000
+1000
+23.72
+Running task3 for n = 10^6, t = 9, best_ts = 1024
+-1000
+1000
+21.8283
+Running task3 for n = 10^6, t = 10, best_ts = 1024
+-1000
+1000
+18.1467
+Running task3 for n = 10^6, t = 11, best_ts = 1024
+-1000
+1000
+17.9976
+Running task3 for n = 10^6, t = 12, best_ts = 1024
+-1000
+1000
+17.6617
+Running task3 for n = 10^6, t = 13, best_ts = 1024
+-1000
+1000
+15.8655
+Running task3 for n = 10^6, t = 14, best_ts = 1024
+-1000
+1000
+16.35
+Running task3 for n = 10^6, t = 15, best_ts = 1024
+-1000
+1000
+18.7221
+Running task3 for n = 10^6, t = 16, best_ts = 1024
+-1000
+1000
+17.7936
+Running task3 for n = 10^6, t = 17, best_ts = 1024
+-1000
+1000
+16.964
+Running task3 for n = 10^6, t = 18, best_ts = 1024
+-1000
+1000
+15.5784
+Running task3 for n = 10^6, t = 19, best_ts = 1024
+-1000
+1000
+15.8339
+Running task3 for n = 10^6, t = 20, best_ts = 1024
+-1000
+1000
+16.0172
