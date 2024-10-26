@@ -34,9 +34,9 @@ void getAcc(const double pos[][3], const double mass[], double acc[][3], int N) 
                 double dy = pos[j][1] - pos[i][1];
                 double dz = pos[j][2] - pos[i][2];
                 double inv_r3 = 1.0 / std::pow(dx * dx + dy * dy + dz * dz + softening * softening, 1.5);
-                a[i][0] += G * dx * inv_r3 * mass[j]
-                a[i][1] += G * dy * inv_r3 * mass[j]
-                a[i][2] += G * dz * inv_r3 * mass[j]
+                acc[i][0] += G * dx * inv_r3 * mass[j]
+                acc[i][1] += G * dy * inv_r3 * mass[j]
+                acc[i][2] += G * dz * inv_r3 * mass[j]
             }
         }
     }
