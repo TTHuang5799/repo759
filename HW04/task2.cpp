@@ -20,8 +20,26 @@ const double board_size = 4.0; // Size of the board
 void getAcc(const double pos[][3], const double mass[], double acc[][3], int N) {
     
     // TODO:
-    N = pos.row
-    acc
+    // a = np.zeros((N, 3)) in nbody.py
+    for (int i = 0; i < N; i++) {
+        acc[i][0] = 0.0;
+        acc[i][1] = 0.0;
+        acc[i][2] = 0.0;
+    }
+
+    for (int i = 0; i < N; i++) {
+        for (int j = 0; j < N; j++) {
+            if (i != j) {
+                double dx = pos[j][0] - pos[i][0];
+                double dy = pos[j][1] - pos[i][1];
+                double dz = pos[j][2] - pos[i][2];
+                double inv_r3 = 1.0 / std::pow(dx * dx + dy * dy + dz * dz + softening * softening, 1.5);
+                a[i][0] += G * dx * inv_r3 * mass[j]
+                a[i][1] += G * dy * inv_r3 * mass[j]
+                a[i][2] += G * dz * inv_r3 * mass[j]
+            }
+        }
+    }
 }
 
 // For debug: save positions to a CSV file
@@ -129,17 +147,33 @@ int main(int argc, char *argv[]) {
     for (int step = 0; step < Nt; step++) {
         
         // TODO: (1/2) kick
-
+        for (int i = 0; i < N; i++) {
+            vel[i][0] += acc[i][0] * dt * 0.5;
+            vel[i][1] += acc[i][1] * dt * 0.5;
+            vel[i][2] += acc[i][2] * dt * 0.5;
+        }
 
         // TODO: Drift
-      
-
-        // TODO: Ensure particles stay within the board limits
-
+        for (int i = 0; i < N; ++i) {
+            pos[i][0] += vel[i][0] * dt;
+            pos[i][1] += vel[i][1] * dt;
+            pos[i][2] += vel[i][2] * dt;
+    
+            // TODO: Ensure particles stay within the board limits
+            pos[i][0] = std::max(-board_size, std::min(board_size, pos[i][0]));
+            pos[i][1] = std::max(-board_size, std::min(board_size, pos[i][1]));
+            pos[i][2] = std::max(-board_size, std::min(board_size, pos[i][2]));
+        }
+        
         // Update accelerations
         getAcc(pos, mass, acc, N);
 
         // TODO: (1/2) kick
+        for (int i = 0; i < N; i++) {
+            vel[i][0] += acc[i][0] * dt * 0.5;
+            vel[i][1] += acc[i][1] * dt * 0.5;
+            vel[i][2] += acc[i][2] * dt * 0.5;
+        }
 
         // Update time
         t += dt;
