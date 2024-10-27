@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 #SBATCH -p instruction
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=20
+#SBATCH --cpus-per-task=8
 #SBATCH --output=task3.output
 #SBATCH --error=task3.err
 
