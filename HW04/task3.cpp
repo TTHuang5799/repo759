@@ -6,6 +6,7 @@
 #include <ctime>   
 #include <chrono>
 #include <random>
+#include <omp.h>
 
 using std::chrono::high_resolution_clock;
 using std::chrono::duration;
@@ -21,12 +22,13 @@ void getAcc(const double pos[][3], const double mass[], double acc[][3], int N) 
     
     // TODO:
     // a = np.zeros((N, 3)) in nbody.py
+    #pragma omp parallel for
     for (int i = 0; i < N; i++) {
         acc[i][0] = 0.0;
         acc[i][1] = 0.0;
         acc[i][2] = 0.0;
     }
-
+    #pragma omp parallel for collapse(2)
     for (int i = 0; i < N; i++) {
         for (int j = 0; j < N; j++) {
             if (i != j) {
@@ -71,15 +73,20 @@ int main(int argc, char *argv[]) {
     start = high_resolution_clock::now();
 
     // Check if correct number of arguments are provided
-    if (argc != 3) {
-        std::cerr << "Usage: " << argv[0] << " <number_of_particles> <simulation_end_time>" << std::endl;
+    // Add an argument num_threads
+    if (argc != 4) {
+        std::cerr << "Usage: " << argv[0] << " <number_of_particles> <simulation_end_time> <num_threads>" << std::endl;
         return 1;
     }
 
     // Read N and tEnd from command line
     int N = std::stoi(argv[1]);     // Number of particles
     double tEnd = std::stod(argv[2]); // Time at which simulation ends
+    int num_threads = std::stoi(argv[3]); // Number of threads
 
+    // Set the number of threads
+    omp_set_num_threads(num_threads);
+    
     // File to save positions
     std::string filename = "positions.csv";
 
@@ -105,6 +112,7 @@ int main(int argc, char *argv[]) {
     double t = 0.0;
 
     // Set initial masses and random positions/velocities
+    #pragma omp parallel for
     for (int i = 0; i < N; i++) {
         mass[i] = uniform_dist(generator);
 
@@ -120,6 +128,7 @@ int main(int argc, char *argv[]) {
     // Convert to Center-of-Mass frame
     double velCM[3] = {0.0, 0.0, 0.0};
     double totalMass = 0.0;
+    #pragma omp parallel for reduction(+:velCM[0], velCM[1], velCM[2], totalMass)
     for (int i = 0; i < N; i++) {
         velCM[0] += vel[i][0] * mass[i];
         velCM[1] += vel[i][1] * mass[i];
@@ -131,6 +140,7 @@ int main(int argc, char *argv[]) {
     velCM[1] /= totalMass;
     velCM[2] /= totalMass;
 
+    #pragma omp parallel for
     for (int i = 0; i < N; i++) {
         vel[i][0] -= velCM[0];
         vel[i][1] -= velCM[1];
@@ -147,6 +157,7 @@ int main(int argc, char *argv[]) {
     for (int step = 0; step < Nt; step++) {
         
         // TODO: (1/2) kick
+        #pragma omp parallel for
         for (int i = 0; i < N; i++) {
             vel[i][0] += acc[i][0] * dt * 0.5;
             vel[i][1] += acc[i][1] * dt * 0.5;
@@ -154,6 +165,7 @@ int main(int argc, char *argv[]) {
         }
 
         // TODO: Drift
+        #pragma omp parallel for
         for (int i = 0; i < N; ++i) {
             pos[i][0] += vel[i][0] * dt;
             pos[i][1] += vel[i][1] * dt;
@@ -169,6 +181,7 @@ int main(int argc, char *argv[]) {
         getAcc(pos, mass, acc, N);
 
         // TODO: (1/2) kick
+        #pragma omp parallel for
         for (int i = 0; i < N; i++) {
             vel[i][0] += acc[i][0] * dt * 0.5;
             vel[i][1] += acc[i][1] * dt * 0.5;
@@ -179,7 +192,7 @@ int main(int argc, char *argv[]) {
         t += dt;
 
         // For debug: save positions to CSV at each step
-        savePositionsToCSV(pos, N, step, filename);
+        // savePositionsToCSV(pos, N, step, filename);
     }
 
     // Clean up dynamically allocated memory
