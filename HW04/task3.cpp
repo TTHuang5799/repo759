@@ -127,18 +127,19 @@ int main(int argc, char *argv[]) {
 
     // Convert to Center-of-Mass frame
     double velCM[3] = {0.0, 0.0, 0.0};
+    double velCM_0 = 0.0, velCM_1 = 0.0, velCM_2 = 0.0;
     double totalMass = 0.0;
-    #pragma omp parallel for reduction(+:velCM[0], velCM[1], velCM[2], totalMass)
+    #pragma omp parallel for reduction(+:velCM_0, velCM_1, velCM_2, totalMass)
     for (int i = 0; i < N; i++) {
-        velCM[0] += vel[i][0] * mass[i];
-        velCM[1] += vel[i][1] * mass[i];
-        velCM[2] += vel[i][2] * mass[i];
+        velCM_0 += vel[i][0] * mass[i];
+        velCM_1 += vel[i][1] * mass[i];
+        velCM_2 += vel[i][2] * mass[i];
         totalMass += mass[i];
     }
 
-    velCM[0] /= totalMass;
-    velCM[1] /= totalMass;
-    velCM[2] /= totalMass;
+    velCM[0] = velCM_0 / totalMass;
+    velCM[1] = velCM_1 / totalMass;
+    velCM[2] = velCM_2 / totalMass;
 
     #pragma omp parallel for
     for (int i = 0; i < N; i++) {
