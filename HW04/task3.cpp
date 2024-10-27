@@ -187,7 +187,7 @@ int main(int argc, char *argv[]) {
     }
 
     // Initial accelerations
-    getAcc(pos, mass, acc, N);
+    getAcc(pos, mass, acc, N, scheduling_policies);
 
     // Number of timesteps
     int Nt = int(tEnd / dt);
