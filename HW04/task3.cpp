@@ -7,6 +7,7 @@
 #include <chrono>
 #include <random>
 #include <omp.h>
+#include <string>
 
 using std::chrono::high_resolution_clock;
 using std::chrono::duration;
@@ -18,29 +19,65 @@ const double dt = 0.01;        // Time step
 const double board_size = 4.0; // Size of the board
 
 // Function to calculate acceleration due to gravity
-void getAcc(const double pos[][3], const double mass[], double acc[][3], int N) {
+void getAcc(const double pos[][3], const double mass[], double acc[][3], int N, const std::string& scheduling_policies) {
     
     // TODO:
     // a = np.zeros((N, 3)) in nbody.py
-    #pragma omp parallel for
+    #pragma omp parallel for schedule(static, 10)
     for (int i = 0; i < N; i++) {
         acc[i][0] = 0.0;
         acc[i][1] = 0.0;
         acc[i][2] = 0.0;
     }
-    #pragma omp parallel for collapse(2)
-    for (int i = 0; i < N; i++) {
-        for (int j = 0; j < N; j++) {
-            if (i != j) {
-                double dx = pos[j][0] - pos[i][0];
-                double dy = pos[j][1] - pos[i][1];
-                double dz = pos[j][2] - pos[i][2];
-                double inv_r3 = 1.0 / std::pow(dx * dx + dy * dy + dz * dz + softening * softening, 1.5);
-                acc[i][0] += G * dx * inv_r3 * mass[j];
-                acc[i][1] += G * dy * inv_r3 * mass[j];
-                acc[i][2] += G * dz * inv_r3 * mass[j];
+    
+    if (scheduling_policies == "static") {
+        #pragma omp parallel for collapse(2) schedule(static, 10) 
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (i != j) {
+                    double dx = pos[j][0] - pos[i][0];
+                    double dy = pos[j][1] - pos[i][1];
+                    double dz = pos[j][2] - pos[i][2];
+                    double inv_r3 = 1.0 / std::pow(dx * dx + dy * dy + dz * dz + softening * softening, 1.5);
+                    acc[i][0] += G * dx * inv_r3 * mass[j];
+                    acc[i][1] += G * dy * inv_r3 * mass[j];
+                    acc[i][2] += G * dz * inv_r3 * mass[j];
+                }
             }
         }
+    } else if (scheduling_policies == "dynamic") {
+        #pragma omp parallel for collapse(2) schedule(dynamic, 10)
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (i != j) {
+                    double dx = pos[j][0] - pos[i][0];
+                    double dy = pos[j][1] - pos[i][1];
+                    double dz = pos[j][2] - pos[i][2];
+                    double inv_r3 = 1.0 / std::pow(dx * dx + dy * dy + dz * dz + softening * softening, 1.5);
+                    acc[i][0] += G * dx * inv_r3 * mass[j];
+                    acc[i][1] += G * dy * inv_r3 * mass[j];
+                    acc[i][2] += G * dz * inv_r3 * mass[j];
+                }
+            }
+        }
+    } else if (scheduling_policies == "guided") {
+        #pragma omp parallel for collapse(2) schedule(guided, 10)
+        for (int i = 0; i < N; i++) {
+            for (int j = 0; j < N; j++) {
+                if (i != j) {
+                    double dx = pos[j][0] - pos[i][0];
+                    double dy = pos[j][1] - pos[i][1];
+                    double dz = pos[j][2] - pos[i][2];
+                    double inv_r3 = 1.0 / std::pow(dx * dx + dy * dy + dz * dz + softening * softening, 1.5);
+                    acc[i][0] += G * dx * inv_r3 * mass[j];
+                    acc[i][1] += G * dy * inv_r3 * mass[j];
+                    acc[i][2] += G * dz * inv_r3 * mass[j];
+                }
+            }
+        }
+    } else {
+        std::cerr << "Invalid scheduling policy specified. Use 'static', 'dynamic', or 'guided'." << std::endl;
+        std::exit(1);
     }
 }
 
@@ -73,9 +110,9 @@ int main(int argc, char *argv[]) {
     start = high_resolution_clock::now();
 
     // Check if correct number of arguments are provided
-    // Add an argument num_threads
-    if (argc != 4) {
-        std::cerr << "Usage: " << argv[0] << " <number_of_particles> <simulation_end_time> <num_threads>" << std::endl;
+    // Add an argument num_threads and scheduleing_policies
+    if (argc != 5) {
+        std::cerr << "Usage: " << argv[0] << " <number_of_particles> <simulation_end_time> <num_threads> <schedule_policy>" << std::endl;
         return 1;
     }
 
@@ -83,6 +120,7 @@ int main(int argc, char *argv[]) {
     int N = std::stoi(argv[1]);     // Number of particles
     double tEnd = std::stod(argv[2]); // Time at which simulation ends
     int num_threads = std::stoi(argv[3]); // Number of threads
+    std::string scheduling_policies = argv[4]; // Scheduling policies
 
     // Set the number of threads
     omp_set_num_threads(num_threads);
@@ -156,44 +194,98 @@ int main(int argc, char *argv[]) {
 
     // Main simulation loop
     for (int step = 0; step < Nt; step++) {
-        
         // TODO: (1/2) kick
-        #pragma omp parallel for
-        for (int i = 0; i < N; i++) {
-            vel[i][0] += acc[i][0] * dt * 0.5;
-            vel[i][1] += acc[i][1] * dt * 0.5;
-            vel[i][2] += acc[i][2] * dt * 0.5;
+        if (scheduling_policies == "static") {
+            #pragma omp parallel for schedule(static, 10)
+            for (int i = 0; i < N; i++) {
+                vel[i][0] += acc[i][0] * dt * 0.5;
+                vel[i][1] += acc[i][1] * dt * 0.5;
+                vel[i][2] += acc[i][2] * dt * 0.5;
+            }
+        } else if (scheduling_policies == "dynamic") {
+            #pragma omp parallel for schedule(dynamic, 10)
+            for (int i = 0; i < N; i++) {
+                vel[i][0] += acc[i][0] * dt * 0.5;
+                vel[i][1] += acc[i][1] * dt * 0.5;
+                vel[i][2] += acc[i][2] * dt * 0.5;
+            }
+        } else if (scheduling_policies == "guided") {
+            #pragma omp parallel for schedule(guided, 10)
+            for (int i = 0; i < N; i++) {
+                vel[i][0] += acc[i][0] * dt * 0.5;
+                vel[i][1] += acc[i][1] * dt * 0.5;
+                vel[i][2] += acc[i][2] * dt * 0.5;
+            }
         }
 
         // TODO: Drift
-        #pragma omp parallel for
-        for (int i = 0; i < N; ++i) {
-            pos[i][0] += vel[i][0] * dt;
-            pos[i][1] += vel[i][1] * dt;
-            pos[i][2] += vel[i][2] * dt;
+        if (scheduling_policies == "static") {
+            #pragma omp parallel for schedule(static, 10)
+            for (int i = 0; i < N; ++i) {
+                pos[i][0] += vel[i][0] * dt;
+                pos[i][1] += vel[i][1] * dt;
+                pos[i][2] += vel[i][2] * dt;
     
-            // TODO: Ensure particles stay within the board limits
-            pos[i][0] = std::max(-board_size, std::min(board_size, pos[i][0]));
-            pos[i][1] = std::max(-board_size, std::min(board_size, pos[i][1]));
-            pos[i][2] = std::max(-board_size, std::min(board_size, pos[i][2]));
+                pos[i][0] = std::max(-board_size, std::min(board_size, pos[i][0]));
+                pos[i][1] = std::max(-board_size, std::min(board_size, pos[i][1]));
+                pos[i][2] = std::max(-board_size, std::min(board_size, pos[i][2]));
+            }
+        } else if (scheduling_policies == "dynamic") {
+            #pragma omp parallel for schedule(dynamic, 10)
+            for (int i = 0; i < N; ++i) {
+                pos[i][0] += vel[i][0] * dt;
+                pos[i][1] += vel[i][1] * dt;
+                pos[i][2] += vel[i][2] * dt;
+    
+                pos[i][0] = std::max(-board_size, std::min(board_size, pos[i][0]));
+                pos[i][1] = std::max(-board_size, std::min(board_size, pos[i][1]));
+                pos[i][2] = std::max(-board_size, std::min(board_size, pos[i][2]));
+            }
+        } else if (scheduling_policies == "guided") {
+            #pragma omp parallel for schedule(guided, 10)
+            for (int i = 0; i < N; ++i) {
+                pos[i][0] += vel[i][0] * dt;
+                pos[i][1] += vel[i][1] * dt;
+                pos[i][2] += vel[i][2] * dt;
+    
+                pos[i][0] = std::max(-board_size, std::min(board_size, pos[i][0]));
+                pos[i][1] = std::max(-board_size, std::min(board_size, pos[i][1]));
+                pos[i][2] = std::max(-board_size, std::min(board_size, pos[i][2]));
+            }
         }
         
         // Update accelerations
         getAcc(pos, mass, acc, N);
 
         // TODO: (1/2) kick
-        #pragma omp parallel for
-        for (int i = 0; i < N; i++) {
-            vel[i][0] += acc[i][0] * dt * 0.5;
-            vel[i][1] += acc[i][1] * dt * 0.5;
-            vel[i][2] += acc[i][2] * dt * 0.5;
+        if (scheduling_policies == "static") {
+            #pragma omp parallel for schedule(static, 10)
+            for (int i = 0; i < N; i++) {
+                vel[i][0] += acc[i][0] * dt * 0.5;
+                vel[i][1] += acc[i][1] * dt * 0.5;
+                vel[i][2] += acc[i][2] * dt * 0.5;
+            }
+        } else if (scheduling_policies == "dynamic") {
+            #pragma omp parallel for schedule(dynamic, 10)
+            for (int i = 0; i < N; i++) {
+                vel[i][0] += acc[i][0] * dt * 0.5;
+                vel[i][1] += acc[i][1] * dt * 0.5;
+                vel[i][2] += acc[i][2] * dt * 0.5;
+            }
+        } else if (scheduling_policies == "guided") {
+            #pragma omp parallel for schedule(guided, 10)
+            for (int i = 0; i < N; i++) {
+                vel[i][0] += acc[i][0] * dt * 0.5;
+                vel[i][1] += acc[i][1] * dt * 0.5;
+                vel[i][2] += acc[i][2] * dt * 0.5;
+            }
         }
-
+        
         // Update time
         t += dt;
 
         // For debug: save positions to CSV at each step
-        savePositionsToCSV(pos, N, step, filename);
+        // savePositionsToCSV(pos, N, step, filename);
     }
 
     // Clean up dynamically allocated memory
