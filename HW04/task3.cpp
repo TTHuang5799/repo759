@@ -255,7 +255,7 @@ int main(int argc, char *argv[]) {
         }
         
         // Update accelerations
-        getAcc(pos, mass, acc, N);
+        getAcc(pos, mass, acc, N, scheduling_policies);
 
         // TODO: (1/2) kick
         if (scheduling_policies == "static") {
